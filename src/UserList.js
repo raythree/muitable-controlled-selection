@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MuiTable from 'material-table';
 
 export default (props) => {
@@ -10,16 +10,10 @@ export default (props) => {
   const options = {
     search: false,
     paging: false,
-    selection: true,
-    selectionProps: row => {
-      return {
-        checked: props.selection[row.id] ? true : row.tableData.checked
-      };
-    }
+    selection: true
   };
 
   function onChangeSelection(rows) {
-    console.log(rows);
     let newSelection = {};
     rows.forEach((row) => {
       if (row.tableData.checked) {
@@ -29,15 +23,22 @@ export default (props) => {
     props.onChangeSelection(newSelection);
   }
 
-  const tableData = props.data.map((item) => {
-    return {...item, tableData: {checked: props.selection[item.id] ? true: false}};
-  });
+  function getTableData() {
+    return props.data.map((row) => {
+      return {...row, tableData: {checked: props.selection[row.id] ? true: false}};
+    })
+  }
+
+  let [tableData, setTableData] = useState(getTableData());
+  useEffect(() => {
+    setTableData(getTableData());
+  }, [props.selection, props.data]);
 
   return (    
     <MuiTable 
       title={title} 
       columns={columns} 
-      data={props.data} 
+      data={tableData} 
       options={options}
       onSelectionChange={onChangeSelection}
     />
