@@ -17,6 +17,11 @@ export default () => {
   };
 
   return (
-    <UserList data={data} selection={selection} onChangeSelection={onChangeSelection} />
+    <UserList 
+      data={data} 
+      selection={selection} 
+      onChangeSelection={onChangeSelection} 
+      selectOnRowClick={true}
+    />
   );
 }

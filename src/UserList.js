@@ -8,7 +8,7 @@ const columns=[
   { title: 'Last', field: 'last' }
 ];
 
-export default ({data, selection, onChangeSelection}) => {
+export default ({data, selection, onChangeSelection, selectOnRowClick = false}) => {
   const options = useMemo(() => ({
     search: false,
     paging: false,
@@ -31,11 +31,19 @@ export default ({data, selection, onChangeSelection}) => {
       onChangeSelection(newSelection);  
   }, [onChangeSelection]);
   
+  const onRowClick = useCallback((event, row) => {
+    if (selectOnRowClick) {
+      console.log(event, row);
+      onChangeSelection({...selection, [row.id]: !selection[row.id]});  
+    }
+  });
+
   return (    
     <MuiTable 
       title={title} 
       columns={columns} 
       data={data} 
+      onRowClick={onRowClick}
       options={options}
       onSelectionChange={selectionChange}
     />
